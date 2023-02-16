@@ -28,12 +28,10 @@ public class Dial : MonoBehaviour
             }
             messageText.text= (string)messages[currentMessage];
             float zRotation = -1*(currentMessage+1)*(360/messages.Count);
-            Debug.Log(zRotation);
             this.transform.eulerAngles= new Vector3(0,0,zRotation);
         }
     }
     public void sendMessage(string newMessage){
-        Debug.Log("test");
         string recieveMessage = "Message -"+(messages.Count+1)+"\n"+newMessage;
         messages.Add(recieveMessage);
         if(messages.Count!=1){
