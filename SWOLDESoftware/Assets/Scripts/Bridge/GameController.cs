@@ -16,14 +16,14 @@ public class GameController : MonoBehaviour
     private float[] position;
     private TextMeshProUGUI speedText;
     private TMP_InputField headingText;
-
-
     [SerializeField]
     private GameObject fromCICMessage,canvasFromCIC,currentShip,compassPointer;
     private TextMeshProUGUI fromCICMessageText;
     //Target Screen
     [SerializeField]
-    private GameObject targetScreenGame, targetScreenCanvas, worldCalc, enemyPre;
+    private GameObject targetScreenCanvas, worldCalc, enemyPre, currentEnemy, targetButtons;
+    [SerializeField]
+    private GameObject[] ammoObjects;
     private PlacementCalc placementCalc;
     // Start is called before the first frame update
     void Start()
@@ -73,22 +73,62 @@ public class GameController : MonoBehaviour
     public void cicButton(){
         if(targetScreenCanvas.activeSelf){
             targetScreenCanvas.SetActive(false);
-            targetScreenGame.SetActive(false);
+            targetButtons.SetActive(false);
         }
         else{
             canvasFromCIC.SetActive(!canvasFromCIC.activeSelf);
         }
     }
+    //MessageType,#,Lat:Lon,Heading,Speed
     public void recieveCIC(string message){
         canvasFromCIC.SetActive(true);
         fromCICMessageText.text=message;
         string[] inputs= message.Split(",");
-        string[] latLon= new string[2];
-        for(int i=0; i<inputs.Length; i++){
-            if(inputs[i].Contains(":")){
-                latLon = inputs[i].Split(":");
+        if(inputs[0] == "0"){
+            string[] latLon= new string[2];
+            for(int i=0; i<inputs.Length; i++){
+                if(inputs[i].Contains(":")){
+                    latLon = inputs[i].Split(":");
+                }
+            }
+            GameObject newEnemy = Instantiate(enemyPre, placementCalc.calcWorldPos(latLon, currentShip.transform.position), Quaternion.identity);
+            EnemyShip newContact= newEnemy.GetComponent<EnemyShip>();
+            newContact.name = inputs[1];
+            newContact.setContactValue(inputs,latLon);
+        }
+    }
+    public void setSelectedEnemy(GameObject selectedShip){
+        currentEnemy = selectedShip;
+    }
+    public void sendSolution(string stringAmmo){
+        string[] ammoNumbers =stringAmmo.Split(",");
+        int[] ammo = new int[5]{int.Parse(ammoNumbers[0]),int.Parse(ammoNumbers[1]),int.Parse(ammoNumbers[2]),int.Parse(ammoNumbers[3]),int.Parse(ammoNumbers[4])};
+        EnemyShip selectedEnemy = GameObject.Find(ammoNumbers[0]).GetComponent<EnemyShip>();
+        selectedEnemy.firingSolution(ammo);
+    }
+    public void targetButtonActive(){targetButtons.SetActive(true);}
+    public void requestSolution(){
+        Debug.Log("Bridge Requesting Firing Solution for Contact "+currentEnemy.name);
+    }
+    public void fire(){
+        EnemyShip selectedEnemy = currentEnemy.GetComponent<EnemyShip>();
+        int[] ammo=selectedEnemy.getAmmo();
+        cicButton();
+        StartCoroutine(attack(ammo));
+    }
+    IEnumerator attack(int[] ammo){
+        for(int i=1; i<ammo.Length; i++){
+            for(int j=0; j<ammo[i]; j++){
+                GameObject spawnedBullet = Instantiate(ammoObjects[i-1], currentShip.transform.position, Quaternion.identity);
+                Vector3 direction = (currentEnemy.transform.position - spawnedBullet.transform.position).normalized;
+                Quaternion rotation = Quaternion.LookRotation(Vector3.forward, direction);
+                if(i!=1){rotation *= Quaternion.Euler(0,0,45);}
+                else{rotation *= Quaternion.Euler(0,0,90);}
+                spawnedBullet.transform.rotation= rotation;
+                Rigidbody2D rigidbody2D= spawnedBullet.GetComponent<Rigidbody2D>();
+                rigidbody2D.AddForce(direction *5, ForceMode2D.Impulse);
+                yield return new WaitForSeconds(1f);
             }
         }
-        Instantiate(enemyPre, placementCalc.calcWorldPos(latLon, currentShip.transform.position), Quaternion.identity);
     }
 }

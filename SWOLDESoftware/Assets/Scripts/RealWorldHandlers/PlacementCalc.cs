@@ -28,7 +28,6 @@ public class PlacementCalc : MonoBehaviour
     }
     public Vector3 calcWorldPos(string[] position, Vector3 currentPos){
         double latChange = CalculateLatChange(position);
-        Debug.Log(latChange);
         double lonChange = CalculateLonChange(position);
         Vector3 worldPos = new Vector3(currentPos.x + (float)(xNautMile*lonChange),currentPos.y + (float)(yNautMile*latChange),0);
         return worldPos;
@@ -56,5 +55,18 @@ public class PlacementCalc : MonoBehaviour
     public void setCurrentLoc(string[] latLon){
         currentLoc[0] = ConvertDmsToDecimal(latLon[0]);
         currentLoc[1] = ConvertDmsToDecimal(latLon[1]);
+    }
+    public bool inRange(string[] position, int range){
+        double distance =0;
+        double latChange = CalculateLatChange(position);
+        double lonChange = CalculateLonChange(position);
+        distance = Math.Sqrt((latChange*latChange)+(lonChange*lonChange));
+        Debug.Log(distance);
+        if(distance <= range){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

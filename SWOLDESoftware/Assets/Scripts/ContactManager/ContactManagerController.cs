@@ -9,20 +9,11 @@ public class ContactManagerController : MonoBehaviour
     private GameObject contactInfo;
     private TextMeshProUGUI contactInfoText;
     [SerializeField]
-    private GameObject speedInput;
-    private TMP_InputField speedInputText;
+    private GameObject speedInput,typeInput,lonInput,latInput,headingInput;
+    private TMP_InputField speedInputText,headingInputText,latInputText,lonInputText, typeInputText;
     [SerializeField]
-    private GameObject headingInput;
-    private TMP_InputField headingInputText;
-    [SerializeField]
-    private GameObject latInput;
-    private TMP_InputField latInputText;
-    [SerializeField]
-    private GameObject lonInput;
-    private TMP_InputField lonInputText;
-    [SerializeField]
-    private GameObject typeInput;
-    private TMP_InputField typeInputText;
+    private GameObject blipPre, placementControl, marker;
+    private PlacementCalc placementCalc;
     string[] currentContactValue;
     void Start() {
         contactInfoText = contactInfo.GetComponent<TextMeshProUGUI>();
@@ -31,6 +22,7 @@ public class ContactManagerController : MonoBehaviour
         latInputText = latInput.GetComponent<TMP_InputField>();
         lonInputText = lonInput.GetComponent<TMP_InputField>();
         typeInputText = typeInput.GetComponent<TMP_InputField>();
+        placementCalc = placementControl.GetComponent<PlacementCalc>();
     }
     public void contactPressed(string[] contactValues){
         currentContactValue= contactValues;
@@ -49,5 +41,32 @@ public class ContactManagerController : MonoBehaviour
             "Contact: "+ currentContactValue[0]+ " at Lat: "+latInputText.text+", Lon: "+lonInputText.text+". Going "
             +speedInputText.text+" knots with a heading of "+headingInputText.text+" Degrees. It is a "+typeInputText.text+".";
         Debug.Log(messageToBridge);
+    }
+    //#,Lat:Lon,Heading,Speed,Type
+    public void newContact(string newContactMessage){
+        string[] inputs= newContactMessage.Split(",");
+        string[] latLon= new string[2];
+        for(int i=0; i<inputs.Length; i++){
+            if(inputs[i].Contains(":")){
+                latLon = inputs[i].Split(":");
+            }
+        }
+        if(placementCalc.inRange(latLon,4)){
+            GameObject newBlip = Instantiate(blipPre, placementCalc.calcWorldPos(latLon, marker.transform.position),Quaternion.identity);
+            newBlip.name = inputs[0];
+            Contact newContact = newBlip.GetComponent<Contact>();
+            newContact.setContactValue(inputs, latLon);
+        }
+    }
+    //#,Lat:Lon,Heading,Speed
+    public void positionUpdate(string message){
+        string[] inputs= message.Split(",");
+        string[] latLon= new string[2];
+        for(int i=0; i<inputs.Length; i++){
+            if(inputs[i].Contains(":")){
+                latLon = inputs[i].Split(":");
+            }
+        }
+        placementCalc.setCurrentLoc(latLon);
     }
 }
