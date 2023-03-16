@@ -15,18 +15,21 @@ public class CICMainController : MonoBehaviour
     [SerializeField]
     private int[] firingSolution;
     private int[] ammo;
-    int currentContact=1;
+    string currentContact="000";
     [SerializeField]
     private GameObject[] dials;
     private Dial[] dialScripts;
+    [SerializeField]
+    private GameObject contactInput;
+    private TMP_InputField contactInputText;
     bool debug=true;
-    int maxContact=5;
     // Start is called before the first frame update
     void Start()
     {
         ammo= new int[]{50,50,50,1};
         firingSolution= new int[4];
         firingSolutionText = firingSolutionMessage.GetComponent<TextMeshProUGUI>();
+        contactInputText= contactInput.GetComponent<TMP_InputField>();
         shotsLeftText= new TextMeshProUGUI[shotsLeft.Length];
         dialScripts= new Dial[dials.Length];
         for(int i=0; i<dials.Length; i++){
@@ -108,17 +111,9 @@ public class CICMainController : MonoBehaviour
         }
         updateText();
     }
-    public void changeContact(int amount){
-        if(amount == -1){
-            if(currentContact > 1){
-                currentContact--;
-            }
-        }
-        else if(amount == 1){
-            if(currentContact < maxContact){
-                currentContact++;
-            }
-        }
+    public void setContact(){
+        currentContact= contactInputText.text;
+        contactInputText.text= "";
         updateText();
     }
 }

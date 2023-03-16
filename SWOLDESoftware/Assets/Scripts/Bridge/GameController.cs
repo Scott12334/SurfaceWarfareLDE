@@ -10,52 +10,27 @@ public class GameController : MonoBehaviour
     //Position Inputs
     //LAT
     [SerializeField]
-    private GameObject LatInput;
+    private GameObject LatInput,LongInput,SpeedInput,HeadingInput;
     private TextMeshProUGUI latText;
-    //LON
-    [SerializeField]
-    private GameObject LongInput;
     private TextMeshProUGUI longText;
-
     private float[] position;
-    //SPEED
-    [SerializeField]
-    private GameObject SpeedInput;
     private TextMeshProUGUI speedText;
-    //HEADING
-    [SerializeField]
-    private GameObject HeadingInput;
     private TMP_InputField headingText;
-    //COMPASS
+
+
     [SerializeField]
-    private GameObject compassPointer;
-    //SHIP
-    [SerializeField]
-    private GameObject currentShip;
-    //FROM CIC MESSAGE
-    [SerializeField]
-    private GameObject canvasFromCIC;
-    [SerializeField]
-    private GameObject gameFromCIC;
-    [SerializeField]
-    private GameObject fromCICMessage;
+    private GameObject fromCICMessage,canvasFromCIC,currentShip,compassPointer;
     private TextMeshProUGUI fromCICMessageText;
     //Target Screen
     [SerializeField]
-    private GameObject targetScreenGame;
-    [SerializeField]
-    private GameObject targetScreenCanvas;
+    private GameObject targetScreenGame, targetScreenCanvas, worldCalc, enemyPre;
+    private PlacementCalc placementCalc;
     // Start is called before the first frame update
     void Start()
     {
         setTexts();
         position= new float[2]{0,0};
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        placementCalc = worldCalc.GetComponent<PlacementCalc>();
     }
 
     public void sendPositionUpdate(){
@@ -64,6 +39,7 @@ public class GameController : MonoBehaviour
         positionString += ", Longitutde: "+longText.text;
         positionString += ". With a speed of "+speedText.text;
         positionString += " knots. With a heading of "+headingText.text;
+        placementCalc.setCurrentLoc(new string[]{latText.text, longText.text});
         //getHeadingFromString(headingText.text.Trim());
         currentShip.transform.eulerAngles= new Vector3(0,0,180-float.Parse(headingText.text.Trim()));
         compassPointer.transform.eulerAngles= new Vector3(0,0,-1*float.Parse(headingText.text.Trim()));
@@ -101,12 +77,18 @@ public class GameController : MonoBehaviour
         }
         else{
             canvasFromCIC.SetActive(!canvasFromCIC.activeSelf);
-            gameFromCIC.SetActive(!gameFromCIC.activeSelf);
         }
     }
     public void recieveCIC(string message){
         canvasFromCIC.SetActive(true);
-        gameFromCIC.SetActive(true);
         fromCICMessageText.text=message;
+        string[] inputs= message.Split(",");
+        string[] latLon= new string[2];
+        for(int i=0; i<inputs.Length; i++){
+            if(inputs[i].Contains(":")){
+                latLon = inputs[i].Split(":");
+            }
+        }
+        Instantiate(enemyPre, placementCalc.calcWorldPos(latLon, currentShip.transform.position), Quaternion.identity);
     }
 }
