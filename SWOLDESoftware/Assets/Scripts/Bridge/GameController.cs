@@ -79,7 +79,7 @@ public class GameController : MonoBehaviour
             canvasFromCIC.SetActive(!canvasFromCIC.activeSelf);
         }
     }
-    //MessageType,#,Lat:Lon,Heading,Speed
+    //MessageType,#,Lat:Lon,Heading,Speed, Type
     public void recieveCIC(string message){
         canvasFromCIC.SetActive(true);
         fromCICMessageText.text=message;

@@ -16,7 +16,7 @@ public class PlacementCalc : MonoBehaviour
     void Start()
     {
         determineDistance();
-        currentLoc = new double[4];
+        currentLoc = new double[2];
     }
     public void determineDistance(){
         xNautMile = (marker2X.transform.position.x - marker1X.transform.position.x)/distanceX;
@@ -28,6 +28,7 @@ public class PlacementCalc : MonoBehaviour
     }
     public Vector3 calcWorldPos(string[] position, Vector3 currentPos){
         double latChange = CalculateLatChange(position);
+        Debug.Log(latChange);
         double lonChange = CalculateLonChange(position);
         Vector3 worldPos = new Vector3(currentPos.x + (float)(xNautMile*lonChange),currentPos.y + (float)(yNautMile*latChange),0);
         return worldPos;
@@ -35,6 +36,7 @@ public class PlacementCalc : MonoBehaviour
     public double CalculateLatChange(string[] positions)
     {
         double lat2 = ConvertDmsToDecimal(positions[0]);
+        Debug.Log(currentLoc[0]);
         double change = lat2 - currentLoc[0];
         return change;
     }

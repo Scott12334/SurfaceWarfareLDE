@@ -9,11 +9,17 @@ public class DESCON : MonoBehaviour
     [SerializeField]
     private GameObject placementControl, locationMarker;
     private PlacementCalc placementCalc;
+    private bool firstFrame = false;
     // Start is called before the first frame update
     void Start()
     {
         placementCalc = placementControl.GetComponent<PlacementCalc>();
-        placementCalc.setCurrentLoc(new string[]{"30'0\"", "30'0\""});
+    }
+    private void Update() {
+        if(!firstFrame){
+            placementCalc.setCurrentLoc(new string[]{"30'0\"", "30'0\""});
+            firstFrame = true;
+        }
     }
     public void recieveLocationUpdate(string message){
         string[] inputs= message.Split(",");
