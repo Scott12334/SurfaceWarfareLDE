@@ -9,7 +9,7 @@ public class StaffController : MonoBehaviour
     private GameObject[] fleet, viewPanels;
     private string[] names;
     [SerializeField]
-    private GameObject placementControl, locationMarker, shipHolder, shipScreen, shipScreenInteract, toggleCommsObject;
+    private GameObject placementControl, locationMarker, shipHolder, shipScreen, shipScreenInteract, toggleCommsObject, contactScreen, contactInter;
     [SerializeField]
     private GameObject nameDisplay;
     private TextMeshProUGUI nameText;
@@ -83,15 +83,27 @@ public class StaffController : MonoBehaviour
             }
         }
     }
+    public void toggleContact(){
+        shipHolder.SetActive(!shipHolder.activeSelf);
+        contactInter.SetActive(!contactInter.activeSelf);
+        contactScreen.SetActive(!contactScreen.activeSelf);
+    }
     public void showMap(){
         shipHolder.SetActive(true);
         shipScreen.SetActive(false);
         shipScreenInteract.SetActive(false);
+        contactInter.SetActive(false);
+        contactScreen.SetActive(false);
     }
     public void toggleShipScreen(){
         shipHolder.SetActive(!shipHolder.activeSelf);
         shipScreen.SetActive(!shipScreen.activeSelf);
         shipScreenInteract.SetActive(!shipScreenInteract.activeSelf);
+        contactInter.SetActive(false);
+        contactScreen.SetActive(false);
+        if(shipScreen.activeSelf){
+            shipHolder.SetActive(false);
+        }
     }
     public void toggleComms(){
         commsActive = !commsActive;
