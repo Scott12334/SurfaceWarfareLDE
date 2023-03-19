@@ -1364,7 +1364,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 231015302}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1284362911}
+        m_TargetAssemblyTypeName: ContactControl, Assembly-CSharp
+        m_MethodName: newContact
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &231015302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1485,7 +1497,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 253364239}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1284362911}
+        m_TargetAssemblyTypeName: ContactControl, Assembly-CSharp
+        m_MethodName: setAttribute
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &253364239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4793,7 +4817,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &725125198
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6863,7 +6887,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1184514182
 Transform:
   m_ObjectHideFlags: 0
@@ -7273,6 +7297,13 @@ MonoBehaviour:
   attributeSelection: {fileID: 644586098}
   contactInfoDisplay: {fileID: 1959319180}
   attributeSelectionPlaceHolder: {fileID: 1032377473}
+  newInputs:
+  - {fileID: 1479440572}
+  - {fileID: 663566789}
+  - {fileID: 1198596705}
+  - {fileID: 1289239255}
+  - {fileID: 1603828127}
+  - {fileID: 1977487564}
 --- !u!4 &1284362912
 Transform:
   m_ObjectHideFlags: 0
@@ -8955,6 +8986,8 @@ MonoBehaviour:
   shipScreen: {fileID: 835399358}
   shipScreenInteract: {fileID: 999063744}
   toggleCommsObject: {fileID: 1121441387}
+  contactScreen: {fileID: 1994789418}
+  contactInter: {fileID: 725125197}
   nameDisplay: {fileID: 1469657964}
 --- !u!1 &1603828127
 GameObject:
@@ -10378,7 +10411,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1880905906}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1582248307}
+        m_TargetAssemblyTypeName: StaffController, Assembly-CSharp
+        m_MethodName: toggleContact
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1880905906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11331,7 +11376,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1994789419
 RectTransform:
   m_ObjectHideFlags: 0

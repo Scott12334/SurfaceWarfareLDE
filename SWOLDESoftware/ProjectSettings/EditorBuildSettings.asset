@@ -5,10 +5,25 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/ShipView.unity
+    guid: 7efbc98a4e4d2334ebae44026545df0a
   - enabled: 1
     path: Assets/Scenes/JODView.unity
     guid: 70ce8528fe9a65647a4dc3cfd1aa2e45
+  - enabled: 1
+    path: Assets/Scenes/COMOView.unity
+    guid: 679902ded2654804f964692a0eb77678
+  - enabled: 1
+    path: Assets/Scenes/CICMain.unity
+    guid: b3e37f6a22df4964d88515e136f5b116
+  - enabled: 1
+    path: Assets/Scenes/ContactManager.unity
+    guid: 76c23858ee08dfd439023e0e3649f228
+  - enabled: 1
+    path: Assets/Scenes/Staff.unity
+    guid: e10a3eb830c073949a811bd02112afd0
+  - enabled: 1
+    path: Assets/Scenes/DESCONView.unity
+    guid: 74023efde552cdb4aa5902d6f360f073
   m_configObjects: {}
