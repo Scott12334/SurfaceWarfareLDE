@@ -40,14 +40,14 @@ public class StaffController : MonoBehaviour
     }
     public void recieveMessage(string message){
         string[] inputs= message.Split(",");
-        if(inputs[0] == "0"){
+        if(inputs[0] == "2"){
             string[] latLon= new string[2];
             for(int i=0; i<inputs.Length; i++){
                 if(inputs[i].Contains(":")){
                     latLon = inputs[i].Split(":");
                 }
             }
-            fleet[int.Parse(inputs[0])].transform.position = placementCalc.calcWorldPos(latLon, locationMarker.transform.position);
+            fleet[int.Parse(inputs[1])].transform.position = placementCalc.calcWorldPos(latLon, locationMarker.transform.position);
         }
         if(inputs[0] == "1"){
             int shipNumber = int.Parse(inputs[1]);
