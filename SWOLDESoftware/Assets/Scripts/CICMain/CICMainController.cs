@@ -42,26 +42,35 @@ public class CICMainController : MonoBehaviour
         updateText();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(debug){
-            for(int i=0; i<dialScripts.Length; i++){
-            switch(i){
-                    case 0:
-                    dialScripts[i].sendMessage("This is the first message from bridge");
-                    dialScripts[i].sendMessage("This is another message from the bridge");
-                    dialScripts[i].sendMessage("This is the final message from the bridge");
-                    break;
-
-                    case 1:
-                    dialScripts[i].sendMessage("This is the first message from COMO");
-                    dialScripts[i].sendMessage("This is another message from the COMO");
-                    dialScripts[i].sendMessage("This is the final message from the COMO");
-                    break;
+    public void recieveMessage(string message){
+        string[] inputs = message.Split(",");
+        Debug.Log(message);
+        if(inputs[1] == "2"){
+            //Message sent from COMO
+            if(inputs[3] == "3"){
+                dialScripts[1].sendMessage(inputs[4]);
+            }
+        }
+        else if(inputs[1] == "0"){
+            //Message sent from Bridge
+            //Bridge Can send Pos Update, and request firing solution
+            if(inputs.Length > 3){
+                if(inputs[2] == "5"){
+                    dialScripts[0].sendMessage("Bridge Requesting Firing Solution on Contact "+ inputs[3]);
+                }
+                else if(inputs[2] == "6"){
+                    string[] latLon= new string[2];
+                    for(int i=0; i<inputs.Length; i++){
+                        if(inputs[i].Contains(":")){
+                            latLon = inputs[i].Split(":");
+                        }
+                    }
+                    dialScripts[0].sendMessage("Ship is now at Latitude: "+ latLon[0]+ " and Longitude: "+latLon[1]+". Heading at "+inputs[4]+" Degrees with a speed of "+inputs[5]+" knots.");
+                }
+                else{
+                    dialScripts[0].sendMessage(inputs[3]);
                 }
             }
-            debug=false;
         }
     }
 
@@ -105,7 +114,16 @@ public class CICMainController : MonoBehaviour
         }
     }
     public void sendFiringSolution(){
-        Debug.Log(firingSolutionText.text);
+        string messageToBridge="";
+        messageToBridge += GameObject.Find("MessageHandler").GetComponent<MessageHandler>().header();
+        messageToBridge += "7,";
+        messageToBridge += currentContact+",";
+        messageToBridge += firingSolution[0]+",";
+        messageToBridge += firingSolution[1]+",";
+        messageToBridge += firingSolution[2]+",";
+        messageToBridge += firingSolution[3];
+        Debug.Log(messageToBridge);
+        GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(messageToBridge);
         for(int i=0; i<firingSolution.Length; i++){
             firingSolution[i]=0;
         }

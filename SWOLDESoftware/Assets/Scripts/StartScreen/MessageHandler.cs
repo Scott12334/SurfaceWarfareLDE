@@ -17,22 +17,54 @@ public class MessageHandler : MonoBehaviour
         this.panelID = newPanelID;
         currentController = controllers[panelID];
         Debug.Log("Panel ID-"+panelID);
-    }
+    } 
     public void recieveMessage(string latestMessage){
         string[] messageParts = latestMessage.Split(",");
-        int messageShip = int.Parse(messageParts[0]);
-        //IF STAFF/DESCON get all messages
-        if(shipID == 6){
-            currentController.GetComponent<StaffController>().recieveMessage(fixMessage(messageParts));
+        if(latestMessage.Contains("disabled") && int.Parse(messageParts[0]) == shipID){
+            GameObject.Find("SimController").GetComponent<StartScreenControl>().setToggle(true);
         }
-        else if(shipID == 7){
-
+        else if(latestMessage.Contains("enabled") && int.Parse(messageParts[0]) == shipID){
+            GameObject.Find("SimController").GetComponent<StartScreenControl>().setUnToggle(true);
         }
-        //Else only read the ones you need
         else{
-            //Read all messages from Staff, Descon, not from other ships
-            if(messageShip == shipID || messageShip == 6 || messageShip == 7){
-
+            int messageShip = int.Parse(messageParts[0]);
+            int messageType = int.Parse(messageParts[2]);
+            //IF STAFF/DESCON get all messages
+            if(shipID == 6){
+                currentController.GetComponent<StaffController>().recieveMessage(latestMessage);
+            }
+            else if(shipID == 7){
+                currentController.GetComponent<DESCON>().recieveMessage(latestMessage);
+            }
+            //Else only read the ones you need
+            else{
+                //Read all messages from Staff, Descon, not from other ships
+                if(messageShip == shipID || messageShip == 6 || messageShip == 7 || messageType == 6){
+                    if(panelID  ==3){
+                        currentController.GetComponent<CICMainController>().recieveMessage(latestMessage);
+                    }
+                    else if(panelID == 4){
+                        currentController.GetComponent<ContactManagerController>().recieveMessage(latestMessage);
+                    }
+                    else if(panelID == 2){
+                        currentController.GetComponent<COMOController>().recieveMessage(latestMessage);
+                    }
+                    else if(panelID == 1){
+                        currentController.GetComponent<JODController>().recieveMessage(latestMessage);
+                    }
+                    else if(panelID == 0){
+                        currentController.GetComponent<GameController>().recieveMessage(latestMessage);
+                    }
+                }
+            }
+            if(messageParts[2] == "9"){
+                GameObject clock = GameObject.FindGameObjectWithTag("Clock");
+                if(clock != null){
+                    clock.GetComponent<Clock>().toggleClock();
+                }
+                else{
+                    Debug.Log("null");
+                }
             }
         }
     }
@@ -48,4 +80,5 @@ public class MessageHandler : MonoBehaviour
         }
         return finalMessage;
     }
+    public string header(){return shipID+","+panelID+",";}
 }

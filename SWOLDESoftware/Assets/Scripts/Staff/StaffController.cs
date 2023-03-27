@@ -9,7 +9,7 @@ public class StaffController : MonoBehaviour
     private GameObject[] fleet, viewPanels;
     private string[] names;
     [SerializeField]
-    private GameObject placementControl, locationMarker, shipHolder, shipScreen, shipScreenInteract, toggleCommsObject, contactScreen, contactInter;
+    private GameObject placementControl, locationMarker, shipHolder, shipScreen, shipScreenInteract, toggleCommsObject, contactScreen, contactInter, contactEnter, contactControl;
     [SerializeField]
     private GameObject nameDisplay;
     private TextMeshProUGUI nameText;
@@ -18,18 +18,20 @@ public class StaffController : MonoBehaviour
     private bool firstFrame = false;
     private bool commsActive = true;
     private Ship[] ships;
+    bool clockRunning;
     // Start is called before the first frame update
     void Start()
     {
-        placementCalc = placementControl.GetComponent<PlacementCalc>();
+        clockRunning = false;
+        placementCalc = placementControl.GetComponent<PlacementCalc>();       
         ships= new Ship[6];
-        names = new string[6]{"Sampson","Gettysburg","Chosin","Kidd","Galagher","Lake Erie"};
+        names = new string[6]{"Stethem","Gettysburg","Chosin","Kidd","Galagher","Lake Erie"};
         nameText = nameDisplay.GetComponent<TextMeshProUGUI>();
         initShips();
     }
     private void Update() {
         if(!firstFrame){
-            placementCalc.setCurrentLoc(new string[]{"30'0\"", "30'0\""});
+            placementCalc.setCurrentLoc(new string[]{"7 30'0\"", "134 30'0\""});
             firstFrame = true;
         }
     }
@@ -40,18 +42,19 @@ public class StaffController : MonoBehaviour
     }
     public void recieveMessage(string message){
         string[] inputs= message.Split(",");
-        if(inputs[0] == "2"){
+        if(inputs[2] == "6"){
             string[] latLon= new string[2];
             for(int i=0; i<inputs.Length; i++){
                 if(inputs[i].Contains(":")){
                     latLon = inputs[i].Split(":");
                 }
             }
-            fleet[int.Parse(inputs[1])].transform.position = placementCalc.calcWorldPos(latLon, locationMarker.transform.position);
+            fleet[int.Parse(inputs[0])].transform.position = placementCalc.calcWorldPos(latLon, locationMarker.transform.position);
+            fleet[int.Parse(inputs[0])].transform.eulerAngles= new Vector3(0,0,180-float.Parse(inputs[4]));
         }
-        if(inputs[0] == "1"){
-            int shipNumber = int.Parse(inputs[1]);
-            int panelNumber = int.Parse(inputs[2]);
+        if(inputs[2] == "1"){
+            int shipNumber = int.Parse(inputs[0]);
+            int panelNumber = int.Parse(inputs[1]);
             int stateNumber = int.Parse(inputs[3]);
             ships[shipNumber].setPanelActive(panelNumber, stateNumber);
             setPanels();
@@ -110,11 +113,41 @@ public class StaffController : MonoBehaviour
         if(commsActive){
             Debug.Log("Enable Comms for Ship-"+currentShip);
             toggleCommsObject.GetComponent<Image>().color = Color.green;
+            string toggleMessage = GameObject.Find("MessageHandler").GetComponent<MessageHandler>().header();
+            toggleMessage += "4,"+currentShip+","+"0";
+            GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(toggleMessage);
+            Debug.Log(toggleMessage);
         }
         else{
             Debug.Log("Disable Comms for Ship-"+currentShip);
+            toggleCommsObject.GetComponent<Image>().color = Color.green;
+            string toggleMessage = GameObject.Find("MessageHandler").GetComponent<MessageHandler>().header();
+            toggleMessage += "4,"+currentShip+","+"1";
+            GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(toggleMessage);
+            Debug.Log(toggleMessage);
             toggleCommsObject.GetComponent<Image>().color = Color.red;
         }
         ships[currentShip].setCommsActive(commsActive);
+    }
+    public void startClock(){
+        string clockMessage = GameObject.Find("MessageHandler").GetComponent<MessageHandler>().header();
+        clockMessage += "9,";
+        if(!clockRunning){
+            clockRunning = true;
+            clockMessage += "1";
+        }
+        else{
+            clockRunning = false;
+            clockMessage += "0";
+        }
+        contactControl.GetComponent<ContactControl>().startTheClock();
+        GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(clockMessage);
+    }
+    public void destoryContact(){
+        string message = GameObject.Find("MessageHandler").GetComponent<MessageHandler>().header();
+        message += "10,";
+        message += contactEnter.GetComponent<TMP_InputField>().text;
+        Debug.Log(message);
+        GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(message);
     }
 }

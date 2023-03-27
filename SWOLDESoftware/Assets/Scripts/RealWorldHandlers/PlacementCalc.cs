@@ -28,7 +28,6 @@ public class PlacementCalc : MonoBehaviour
     }
     public Vector3 calcWorldPos(string[] position, Vector3 currentPos){
         double latChange = CalculateLatChange(position);
-        Debug.Log(latChange);
         double lonChange = CalculateLonChange(position);
         Vector3 worldPos = new Vector3(currentPos.x + (float)(xNautMile*lonChange),currentPos.y + (float)(yNautMile*latChange),0);
         return worldPos;
@@ -36,7 +35,6 @@ public class PlacementCalc : MonoBehaviour
     public double CalculateLatChange(string[] positions)
     {
         double lat2 = ConvertDmsToDecimal(positions[0]);
-        Debug.Log(currentLoc[0]);
         double change = lat2 - currentLoc[0];
         return change;
     }
@@ -48,10 +46,11 @@ public class PlacementCalc : MonoBehaviour
     }
     private double ConvertDmsToDecimal(string dms)
     {
-        string[] parts = dms.Split('\'', '\"');
-        double minutes = double.Parse(parts[0]);
-        double seconds = double.Parse(parts[1]);
-        double decimalDegrees = minutes + (seconds / 60);
+        string[] parts = dms.Split(' ','\'', '\"');
+        double degrees = double.Parse(parts[0]);
+        double minutes = double.Parse(parts[1]);
+        double seconds = double.Parse(parts[2]);
+        double decimalDegrees = (degrees*60) + minutes + (seconds / 60);
         return decimalDegrees;
     }
     public void setCurrentLoc(string[] latLon){
@@ -63,7 +62,6 @@ public class PlacementCalc : MonoBehaviour
         double latChange = CalculateLatChange(position);
         double lonChange = CalculateLonChange(position);
         distance = Math.Sqrt((latChange*latChange)+(lonChange*lonChange));
-        Debug.Log(distance);
         if(distance <= range){
             return true;
         }
