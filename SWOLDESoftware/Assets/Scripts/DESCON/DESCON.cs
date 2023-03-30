@@ -9,16 +9,34 @@ public class DESCON : MonoBehaviour
     [SerializeField]
     private GameObject placementControl, locationMarker, contactPre, lincoln;
     private PlacementCalc placementCalc;
+    [SerializeField]
+    private List<GameObject> contacts;
     private bool firstFrame = false;
     // Start is called before the first frame update
     void Start()
     {
         placementCalc = placementControl.GetComponent<PlacementCalc>();
+        contacts = new List<GameObject>();
     }
     private void Update() {
         if(!firstFrame){
             placementCalc.setCurrentLoc(new string[]{"7 30'0\"", "134 30'0\""});
             firstFrame = true;
+        }
+        for(int i=0; i<contacts.Count; i++){
+            GameObject currentContact = contacts[i];
+            if(currentContact.transform.position.y < 2.506 && currentContact.transform.position.y > -2.246){
+                if(currentContact.transform.position.x < 7.147 && currentContact.transform.position.x > -7.28){
+                    currentContact.GetComponent<SpriteRenderer>().enabled = true;
+                }
+                else{
+                    currentContact.GetComponent<SpriteRenderer>().enabled = false;
+                }
+            }
+            else{
+                Debug.Log("Wrong "+currentContact.transform.position.y);
+                currentContact.GetComponent<SpriteRenderer>().enabled = false;
+            }
         }
     }
     public void recieveMessage(string message){
@@ -31,7 +49,8 @@ public class DESCON : MonoBehaviour
                 }
             }
             if(GameObject.Find(inputs[3]) == null){
-                GameObject newContact = Instantiate(contactPre, placementCalc.calcWorldPos(latLon, locationMarker.transform.position),Quaternion.identity);            
+                GameObject newContact = Instantiate(contactPre, placementCalc.calcWorldPos(latLon, locationMarker.transform.position),Quaternion.identity);
+                contacts.Add(newContact);            
                 newContact.name = inputs[3];
             }
             else{

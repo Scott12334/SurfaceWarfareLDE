@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 1037
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Inspector
   m_RootView: {fileID: 4}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 167
+  controlID: 159
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -339,7 +339,7 @@ MonoBehaviour:
     m_SaveData: []
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 59740
+  m_LastSelectedObjectID: 28528
 --- !u!114 &14
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -498,7 +498,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/DESCON
+    - Assets/Prefabs
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -541,7 +541,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff00000000ce720000527300001e74000020740000227400002474000026740000287400002a7400002c7400002e74000030740000327400003474000036740000387400003a7400003c740000b2740000
+    m_ExpandedIDs: ffffffff00000000ce720000527300001e74000020740000227400002474000026740000287400002a7400002c7400002e74000030740000327400003474000036740000387400003a7400003c7400003e74000040740000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1023,9 +1023,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -695.12317, y: -121.24609, z: 138802.12}
+    m_Target: {x: -7.035693, y: 4.9776907, z: -0.1399161}
     speed: 2
-    m_Value: {x: -695.12317, y: -121.24609, z: 138802.12}
+    m_Value: {x: -7.035693, y: 4.9776907, z: -0.1399161}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1075,9 +1075,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 1088.5515
+    m_Target: 8.101828
     speed: 2
-    m_Value: 1088.5515
+    m_Value: 8.101828
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1140,7 +1140,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 824dffffd84dffffe44fffff6455ffffb055ffffd257ffff349dffff8a9dffffb09fffffc2e1fffffce1ffff22e4ffff48f4ffff84f4ffffb0f6ffff18fbffffe686000044880000548a0000b88a0000828c0000b08d000080910000c8e5000026e700009ae9000064eb0000fe0202005c040200
+      m_ExpandedIDs: 40a7ffff8ca7ffffaea9ffff88afffffd4afffffe0b1ffffe0b6ffff2cb7ffff60b9ffff5abfffffb0bfffffe8c1ffff96c8ffffd2c8fffff4caffff1ae6ffff66e6ffff8ce8fffff0f5ffff2cf6ffff54f8ffff18fbffff5c880000848c0000968d0000b4d90000c4e300003656010064570100cea80100
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 

@@ -31,7 +31,7 @@ public class RelayControl : MonoBehaviour
     }
     public async void CreateRelay(){
         try{
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(40);
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(50);
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             codeDisplay.GetComponent<TextMeshProUGUI>().text = joinCode;
 

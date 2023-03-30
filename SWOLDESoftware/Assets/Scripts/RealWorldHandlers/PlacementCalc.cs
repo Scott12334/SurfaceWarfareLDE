@@ -13,7 +13,7 @@ public class PlacementCalc : MonoBehaviour
     private double xNautMile;
     private double yNautMile;
     private double[] currentLoc; //[LatM, LatS, LonM, LonS]
-    void Start()
+    void Awake()
     {
         determineDistance();
         currentLoc = new double[2];
@@ -68,5 +68,12 @@ public class PlacementCalc : MonoBehaviour
         else{
             return false;
         }
+    }
+    public double getRange(string[] position){
+        double distance =0;
+        double latChange = CalculateLatChange(position);
+        double lonChange = CalculateLonChange(position);
+        distance = Math.Sqrt((latChange*latChange)+(lonChange*lonChange));
+        return distance;
     }
 }

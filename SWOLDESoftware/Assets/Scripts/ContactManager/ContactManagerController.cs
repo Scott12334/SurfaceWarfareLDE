@@ -49,6 +49,11 @@ public class ContactManagerController : MonoBehaviour
         messageToBridge += speedInputText.text+",";
         messageToBridge += typeInputText.text;
         GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(messageToBridge);
+        latInputText.text = "";
+        lonInputText.text = "";
+        headingInputText.text = "";
+        speedInputText.text = "";
+        typeInputText.text = "";
     }
     //#,Lat:Lon,Heading,Speed,Type
     public void recieveMessage(string newContactMessage){

@@ -6,16 +6,13 @@ public class GameController : MonoBehaviour
 {
     [SerializeField]
     private GameObject CICSendMessage;
-    private TextMeshProUGUI inputText;
+    private TMP_InputField inputText;
     //Position Inputs
     //LAT
     [SerializeField]
     private GameObject LatInput,LongInput,SpeedInput,HeadingInput;
-    private TextMeshProUGUI latText;
-    private TextMeshProUGUI longText;
+    private TMP_InputField latText, longText, speedText, headingText;
     private float[] position;
-    private TextMeshProUGUI speedText;
-    private TMP_InputField headingText;
     [SerializeField]
     private GameObject fromCICMessage,canvasFromCIC,currentShip,compassPointer;
     private TextMeshProUGUI fromCICMessageText;
@@ -53,6 +50,10 @@ public class GameController : MonoBehaviour
             }
         }
         updatePositionMessage();
+        latText.text = "";
+        longText.text = "";
+        speedText.text = "";
+        headingText.text = "";
     }
     public void updatePositionMessage(){
         string messageToServer = GameObject.Find("MessageHandler").GetComponent<MessageHandler>().header();
@@ -60,7 +61,6 @@ public class GameController : MonoBehaviour
         messageToServer += latText.text+":"+longText.text+",";
         messageToServer += headingText.text +",";
         messageToServer += speedText.text;
-        Debug.Log(messageToServer);
         GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(messageToServer);
     }
     public void startPosition(){
@@ -78,6 +78,31 @@ public class GameController : MonoBehaviour
         //ERIE
         startLoc[5] = GameObject.Find("MessageHandler").GetComponent<MessageHandler>().header()+"6,7 46'15\":135 3'30\",235,20";
         GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(startLoc[GameObject.Find("SimController").GetComponent<StartScreenControl>().getShipID()]);
+        switch(GameObject.Find("SimController").GetComponent<StartScreenControl>().getShipID()){
+            case 0:
+            placementCalc.setCurrentLoc(new string[]{"7 44'45\"", "135 6'45\""});
+            break;
+
+            case 1:
+            placementCalc.setCurrentLoc(new string[]{"7 40'30\"", "135 6'15\""});
+            break;
+
+            case 2:
+            placementCalc.setCurrentLoc(new string[]{"7 40'00\"", "134 59'15\""});
+            break;
+
+            case 3:
+            placementCalc.setCurrentLoc(new string[]{"7 45'15\"", "134 59'45\""});
+            break;
+
+            case 4:
+            placementCalc.setCurrentLoc(new string[]{"7 38'30\"", "135 2'45\""});
+            break;
+
+            case 5:
+            placementCalc.setCurrentLoc(new string[]{"7 46'15\"", "135 3'30\""});
+            break;
+        }
     }
     public void getMinutesSeconds(string inputText){
         string[] minutesSeconds= inputText.Split("'");
@@ -92,17 +117,15 @@ public class GameController : MonoBehaviour
         string messageToServer = GameObject.Find("MessageHandler").GetComponent<MessageHandler>().header();
         messageToServer += "3,";
         messageToServer += inputText.text;
-        Debug.Log(messageToServer);
         GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(messageToServer);
+        inputText.text = "";
     }
 
     private void setTexts(){
-        inputText= CICSendMessage.GetComponent<TextMeshProUGUI>();
-        inputText.enableWordWrapping = true;
-        
-        latText= LatInput.GetComponent<TextMeshProUGUI>();
-        longText= LongInput.GetComponent<TextMeshProUGUI>();
-        speedText= SpeedInput.GetComponent<TextMeshProUGUI>();
+        inputText= CICSendMessage.GetComponent<TMP_InputField>();
+        latText= LatInput.GetComponent<TMP_InputField>();
+        longText= LongInput.GetComponent<TMP_InputField>();
+        speedText= SpeedInput.GetComponent<TMP_InputField>();
         headingText= HeadingInput.GetComponent<TMP_InputField>();
         fromCICMessageText= fromCICMessage.GetComponent<TextMeshProUGUI>();
     }
@@ -112,9 +135,6 @@ public class GameController : MonoBehaviour
         if(targetScreenCanvas.activeSelf){
             targetScreenCanvas.SetActive(false);
             targetButtons.SetActive(false);
-        }
-        else{
-            canvasFromCIC.SetActive(!canvasFromCIC.activeSelf);
         }
     }
     //MessageType,#,Lat:Lon,Heading,Speed, Type
@@ -217,6 +237,16 @@ public class GameController : MonoBehaviour
         int[] ammo=selectedEnemy.getAmmo();
         cicButton();
         StartCoroutine(attack(ammo));
+        string messageToServer = GameObject.Find("MessageHandler").GetComponent<MessageHandler>().header();
+        messageToServer += "3,";
+        if(ammo[0] > 0){messageToServer+= "Fire 5-Inch Gun ";}
+        if(ammo[1] > 0){messageToServer+= "Fire "+ammo[1]+ " SAM(s) ";}
+        if(ammo[2] > 0){messageToServer+= "Fire "+ammo[2]+ " SSM(s) ";}
+        if(ammo[3] > 0){messageToServer+= "Fire KID ";}
+        messageToServer += currentEnemy.name;
+        messageToServer += "Range - "+ placementCalc.getRange(selectedEnemy.getLatLon());
+        Debug.Log(messageToServer);
+        GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(messageToServer);
     }
     IEnumerator attack(int[] ammo){
         for(int i=1; i<ammo.Length; i++){

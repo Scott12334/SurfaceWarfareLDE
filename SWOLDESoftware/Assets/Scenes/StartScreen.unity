@@ -6328,7 +6328,7 @@ GameObject:
   - component: {fileID: 165231277}
   - component: {fileID: 165231279}
   - component: {fileID: 165231278}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15595,7 +15595,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 161, y: 169}
+  m_AnchoredPosition: {x: -360, y: 169}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &642156597
@@ -15667,7 +15667,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.2634515, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -15784,7 +15784,7 @@ MonoBehaviour:
   m_InputType: 0
   m_AsteriskChar: 42
   m_KeyboardType: 0
-  m_LineType: 0
+  m_LineType: 1
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
   m_CharacterValidation: 0
@@ -20151,7 +20151,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -24807,7 +24807,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!114 &1195767420
 MonoBehaviour:
@@ -24821,10 +24821,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af0a1eb8b0ad0b74ba725e8ef92b7268, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CICSendMessage: {fileID: 2138718228}
-  LatInput: {fileID: 1995947137}
-  LongInput: {fileID: 542670540}
-  SpeedInput: {fileID: 243453391}
+  CICSendMessage: {fileID: 1827866522}
+  LatInput: {fileID: 1775192755}
+  LongInput: {fileID: 1830700851}
+  SpeedInput: {fileID: 12166722}
   HeadingInput: {fileID: 77503859}
   fromCICMessage: {fileID: 1472277102}
   canvasFromCIC: {fileID: 1069514656}
@@ -28213,7 +28213,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 64.9, y: 12}
+  m_AnchoredPosition: {x: 36, y: 12}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1337398783
@@ -28236,7 +28236,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: USS KIDD
+  m_text: USS LAKE ERIE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -33238,7 +33238,6 @@ MonoBehaviour:
   dials:
   - {fileID: 203345007}
   - {fileID: 284745548}
-  messageInput: {fileID: 873166490}
   inputField: {fileID: 643213900}
 --- !u!4 &1657925817
 Transform:
@@ -35654,7 +35653,7 @@ MonoBehaviour:
   m_InputType: 0
   m_AsteriskChar: 42
   m_KeyboardType: 0
-  m_LineType: 0
+  m_LineType: 1
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
   m_CharacterValidation: 0
@@ -37907,6 +37906,8 @@ MonoBehaviour:
   locationMarker: {fileID: 1242425885}
   contactPre: {fileID: 8069073001759457258, guid: 79ed637adceeb42488c00539d7637b90, type: 3}
   lincoln: {fileID: 377282861}
+  contacts:
+  - {fileID: 0}
 --- !u!4 &1894948099
 Transform:
   m_ObjectHideFlags: 0
@@ -42702,7 +42703,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}

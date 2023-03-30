@@ -9,9 +9,6 @@ public class COMOController : MonoBehaviour
     private GameObject[] dials;
     private Dial[] dialScripts;
     bool debug=true;
-    [SerializeField]
-    private GameObject messageInput;
-    private TextMeshProUGUI messageText;
 
     [SerializeField]
     private GameObject inputField;
@@ -22,8 +19,7 @@ public class COMOController : MonoBehaviour
     void Start()
     {
         inputFieldText = inputField.GetComponent<TMP_InputField>();
-        messageText = messageInput.GetComponent<TextMeshProUGUI>();
-        messageText.enableWordWrapping=true;
+        Debug.Log(inputFieldText);
         dialScripts= new Dial[dials.Length];
         for(int i=0; i<dials.Length; i++){
             dialScripts[i]=dials[i].GetComponent<Dial>();
@@ -96,6 +92,7 @@ public class COMOController : MonoBehaviour
         string messageToServer = GameObject.Find("MessageHandler").GetComponent<MessageHandler>().header();
         messageToServer += "8,";
         messageToServer += destination+",";
+        Debug.Log(inputFieldText.text);
         messageToServer += inputFieldText.text;
         Debug.Log(messageToServer);
         GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(messageToServer);
