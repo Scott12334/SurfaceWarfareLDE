@@ -15,20 +15,20 @@ public class RelayControl : MonoBehaviour
     [SerializeField]
     private GameObject codeDisplay, inputField, relayStuff;
     private bool launched = false;
-    private async void Start(){
+    /*private async void Start(){
         await UnityServices.InitializeAsync();
 
         AuthenticationService.Instance.SignedIn += () =>{
             Debug.Log("Signed in "+ AuthenticationService.Instance.PlayerId);
         };
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
-    }
-    private void Update() {
+    }*/
+    /*private void Update() {
         if(GameObject.FindGameObjectWithTag("Player") != null && launched == false){
             relayStuff.SetActive(false);
             launched = true;
         }
-    }
+    }*/
     public async void CreateRelay(){
         try{
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(50);

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Netcode;
+using Photon.Pun;
 using TMPro;
-public class StartScreenControl : NetworkBehaviour
+public class StartScreenControl : MonoBehaviourPun
 {
     private int selectedShip;
     [SerializeField]
@@ -15,23 +16,22 @@ public class StartScreenControl : NetworkBehaviour
     private GameObject newMessage;
     private MessageHandler messageHandler;
     private bool[] shipsBlocked;
-    [SerializeField]
-    private GameObject clock, lightning, commsOffline, commsOnline;
+    [SerializeField] private GameObject clock, lightning, commsOffline, commsOnline;
     public bool toggled, untoggled;
+    private List<string> messages;
     // Start is called before the first frame update
     void Start()
     {
         lastCount = GameObject.FindGameObjectsWithTag("Message").Length; 
         messageHandler = messageHandlerGO.GetComponent<MessageHandler>();
         shipsBlocked = new bool[6]{false,false,false,false,false,false};
+        messages = new List<string>();
         StartCoroutine(flashingCOMMS());
     }
     void Update(){ 
-        int currentCount = GameObject.FindGameObjectsWithTag("Message").Length;
-        if(currentCount != 0){
-            GameObject[] messages = GameObject.FindGameObjectsWithTag("Message");
-            messageHandler.recieveMessage(messages[messages.Length-1].GetComponent<Message>().getMessage());
-            Destroy(messages[messages.Length-1]);
+        for(int i = 0; i < messages.Count; i++){
+            messageHandler.recieveMessage(messages[i]);
+            messages.RemoveAt(i);
         }
     }
     public void shipSelected(int shipId){
@@ -71,32 +71,9 @@ public class StartScreenControl : NetworkBehaviour
             screensCanvas[7].SetActive(false);
             clock.GetComponent<Clock>().setCurrentPanel(screenID);
     }
-    public void startHost(){
+    /*public void startHost(){
         NetworkManager.Singleton.StartHost();
-    } 
-    [ServerRpc(RequireOwnership = false)]
-    void sendMessageServerRpc(string message){
-        string[] inputs= message.Split(",");
-        if(inputs[2] == "4"){
-            //Ship Blocked
-            if(inputs[4] == "1"){
-                shipsBlocked[int.Parse(inputs[3])] = true;
-                setMessageOnClientRpc(inputs[3]+",disabled");
-            }
-            else if(inputs[4] == "0"){
-                shipsBlocked[int.Parse(inputs[3])] = false;
-                setMessageOnClientRpc(inputs[3]+",enabled");
-            }
-        }
-        if(int.Parse(inputs[0]) < 6){
-            if(shipsBlocked[int.Parse(inputs[0])] == false){
-                setMessageOnClientRpc(message);
-            }
-        }
-        else{
-            setMessageOnClientRpc(message);
-        }
-    }
+    } */
     public void setToggle(bool disabled){toggled = disabled;}
     public void setUnToggle(bool enabled){untoggled = enabled;}
     IEnumerator flashingCOMMS(){
@@ -120,19 +97,54 @@ public class StartScreenControl : NetworkBehaviour
             yield return new WaitForSeconds(0.2f); 
         }
     }
+    public void testPhontonMessage(){
+        this.photonView.RPC("sendServerMessage", RpcTarget.AllBuffered, "Test Message");
+    }
+    //Photon Solution
+    public void sendMessage(string message){
+        this.photonView.RPC("sendServerMessage", RpcTarget.AllBuffered, message);
+    }
+    [PunRPC]
+    private void sendServerMessage(string message){
+        Debug.Log(message);
+        messages.Add(message);
+    }
+    //Unity NetCode soultion
+    /*
     [ClientRpc]
     void setMessageOnClientRpc(string message){
         newMessage = Instantiate(messagePre, Vector3.zero, Quaternion.identity);
         newMessage.GetComponent<Message>().setMessage(message);
         newMessage.GetComponent<NetworkObject>().Spawn();
     }
+    [ServerRpc(RequireOwnership = false)]
+    void sendMessageServerRpc(string message){
+        string[] inputs= message.Split(",");
+        if(inputs[2] == "4"){
+            //Ship Blocked
+            if(inputs[4] == "1"){
+                shipsBlocked[int.Parse(inputs[3])] = true;
+                setMessageOnClientRpc(inputs[3]+",disabled");
+            }
+            else if(inputs[4] == "0"){
+                shipsBlocked[int.Parse(inputs[3])] = false;
+                setMessageOnClientRpc(inputs[3]+",enabled");
+            }
+        }
+        if(int.Parse(inputs[0]) < 6){
+            if(shipsBlocked[int.Parse(inputs[0])] == false){
+                setMessageOnClientRpc(message);
+            }
+        }
+        else{
+            setMessageOnClientRpc(message);
+        }
+    } */
+
     public void createNewMessage(){
         //35'0\":35'0\"
         Debug.Log("test");
-        sendMessageServerRpc("0,4,0,045,35'0\":35'0\",45,12,Schooner");
-    }
-    public void sendMessage(string message){
-        sendMessageServerRpc(message);
+        //sendMessageServerRpc("0,4,0,045,35'0\":35'0\",45,12,Schooner");
     }
     public int getShipID(){
         return selectedShip;
