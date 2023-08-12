@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Unity.Netcode;
 using Photon.Pun;
 using TMPro;
 public class StartScreenControl : MonoBehaviourPun

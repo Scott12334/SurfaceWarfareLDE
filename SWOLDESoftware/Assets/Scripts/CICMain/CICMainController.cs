@@ -16,13 +16,14 @@ public class CICMainController : MonoBehaviour
     private int[] firingSolution;
     private int[] ammo;
     string currentContact="000";
-    [SerializeField]
-    private GameObject[] dials;
-    private Dial[] dialScripts;
+
     [SerializeField]
     private GameObject contactInput;
     private TMP_InputField contactInputText;
-    bool debug=true;
+    
+    private string bridgeMessageString , commoMessageString;
+    [SerializeField] private TextMeshProUGUI bridgeMessageText, commoMessageText;
+    private int bridgeMessageCount, commoMessageCount;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,24 +32,26 @@ public class CICMainController : MonoBehaviour
         firingSolutionText = firingSolutionMessage.GetComponent<TextMeshProUGUI>();
         contactInputText= contactInput.GetComponent<TMP_InputField>();
         shotsLeftText= new TextMeshProUGUI[shotsLeft.Length];
-        dialScripts= new Dial[dials.Length];
-        for(int i=0; i<dials.Length; i++){
-            dialScripts[i]=dials[i].GetComponent<Dial>();
-        }
         for(int i=0; i<shotsLeft.Length; i++){
             shotsLeftText[i]= shotsLeft[i].GetComponent<TextMeshProUGUI>();
             shotsLeftText[i].text= "Shots Left: "+ammo[i];
         }
         updateText();
+
+        bridgeMessageString = "";
+        commoMessageString = "";
+        bridgeMessageCount = 1;
+        commoMessageCount = 1;
     }
 
     public void recieveMessage(string message){
         string[] inputs = message.Split(",");
         Debug.Log(message);
-        if(inputs[1] == "2"){
+        if(inputs[1] == "2" && inputs.Length > 4){
             //Message sent from COMO
             if(inputs[3] == "3"){
-                dialScripts[1].sendMessage(inputs[4]);
+                commoMessageString += "Message " + commoMessageCount + " - " + inputs[4] + "<br>";
+                commoMessageCount ++;
             }
         }
         else if(inputs[1] == "0"){
@@ -56,7 +59,9 @@ public class CICMainController : MonoBehaviour
             //Bridge Can send Pos Update, and request firing solution
             if(inputs.Length > 3){
                 if(inputs[2] == "5"){
-                    dialScripts[0].sendMessage("Bridge Requesting Firing Solution on Contact "+ inputs[3]);
+                    string requestSolution = "Bridge Requesting Firing Solution on Contact "+ inputs[3];
+                    bridgeMessageString += "Message " + bridgeMessageCount + " - " + requestSolution + "<br>";
+                    bridgeMessageCount ++;
                 }
                 else if(inputs[2] == "6"){
                     string[] latLon= new string[2];
@@ -65,13 +70,18 @@ public class CICMainController : MonoBehaviour
                             latLon = inputs[i].Split(":");
                         }
                     }
-                    dialScripts[0].sendMessage("Ship is now at Latitude: "+ latLon[0]+ " and Longitude: "+latLon[1]+". Heading at "+inputs[4]+" Degrees with a speed of "+inputs[5]+" knots.");
+                    string positionMessage = "Ship is now at Latitude: "+ latLon[0]+ " and Longitude: "+latLon[1]+". Heading at "+inputs[4]+" Degrees with a speed of "+inputs[5]+" knots.";
+                    bridgeMessageString += "Message " + bridgeMessageCount + " - " + positionMessage + "<br>";
+                    bridgeMessageCount ++;
                 }
                 else{
-                    dialScripts[0].sendMessage(inputs[3]);
+                    bridgeMessageString += "Message " + bridgeMessageCount + " - " + inputs[3] + "<br>";
+                    bridgeMessageCount ++;
                 }
             }
         }
+        bridgeMessageText.text = bridgeMessageString;
+        commoMessageText.text = commoMessageString;
     }
 
     public void upButtonPressed(int missle){
