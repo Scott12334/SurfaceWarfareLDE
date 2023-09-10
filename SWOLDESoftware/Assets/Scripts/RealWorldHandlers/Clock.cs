@@ -7,8 +7,8 @@ public class Clock : MonoBehaviour
     private int seconds;
     private int minutes;
     private int hours;
-    [SerializeField]
-    private GameObject[] clockDisplay;
+    [SerializeField] private GameObject[] clockDisplay;
+    [SerializeField] private StartScreenControl simController;
     private int currentPanel;
     private bool isRunning;
     // Start is called before the first frame update
@@ -44,6 +44,11 @@ public class Clock : MonoBehaviour
         else{
             StopCoroutine(clockControl());
         }
+    }
+    public void clockSetTime(int sec, int min, int hour){
+        this.seconds = sec;
+        this.minutes = min;
+        this.hours = hour;
     }
     IEnumerator clockControl(){
         while(true){

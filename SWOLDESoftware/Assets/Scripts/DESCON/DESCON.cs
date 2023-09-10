@@ -39,7 +39,11 @@ public class DESCON : MonoBehaviour
             }
         }
     }
+    public void shipClicked(){
+        Debug.Log("Test");
+    }
     public void recieveMessage(string message){
+        Debug.Log(message);
         string[] inputs= message.Split(",");
         if(inputs[2] == "0"){
             string[] latLon= new string[2];
@@ -49,7 +53,10 @@ public class DESCON : MonoBehaviour
                 }
             }
             if(GameObject.Find(inputs[3]) == null){
+                //for(int i =0; i<latLon.Length;i++){Debug.Log(latLon[i]);}
                 GameObject newContact = Instantiate(contactPre, placementCalc.calcWorldPos(latLon, locationMarker.transform.position),Quaternion.identity);
+                newContact.GetComponent<SpriteRenderer>().sortingOrder = 0;
+                newContact.GetComponent<EnemyShip>().setContactValue(inputs,latLon);
                 contacts.Add(newContact);            
                 newContact.name = inputs[3];
             }

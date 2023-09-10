@@ -7,20 +7,20 @@ using TMPro;
 public class StartScreenControl : MonoBehaviourPun
 {
     private int selectedShip;
-    [SerializeField]
-    private GameObject shipSelection, screenSelection, messagePre, textDisplay, messageHandlerGO;
-    [SerializeField]
-    private GameObject[] screensObject, screensCanvas;
+    [SerializeField] private GameObject shipSelection, screenSelection, messagePre, textDisplay, messageHandlerGO;
+    [SerializeField] private GameObject[] screensObject, screensCanvas;
     private int lastCount;
     private GameObject newMessage;
     private MessageHandler messageHandler;
     private bool[] shipsBlocked;
     [SerializeField] private GameObject clock, lightning, commsOffline, commsOnline;
-    public bool toggled, untoggled;
+    public bool toggled, untoggled, canRecieve;
     private List<string> messages;
+    [SerializeField] private TMP_InputField passwordInput;
     // Start is called before the first frame update
     void Start()
     {
+        canRecieve = false;
         lastCount = GameObject.FindGameObjectsWithTag("Message").Length; 
         messageHandler = messageHandlerGO.GetComponent<MessageHandler>();
         shipsBlocked = new bool[6]{false,false,false,false,false,false};
@@ -29,37 +29,46 @@ public class StartScreenControl : MonoBehaviourPun
     }
     void Update(){ 
         for(int i = 0; i < messages.Count; i++){
-            messageHandler.recieveMessage(messages[i]);
-            messages.RemoveAt(i);
+            if(canRecieve){
+                messageHandler.recieveMessage(messages[i]);
+                messages.RemoveAt(i);
+            }
         }
     }
     public void shipSelected(int shipId){
         this.selectedShip = shipId;
         //STAFF
-        if(shipId == 6){
+        //Unsecure password check but doesn't need to be secure
+        if(shipId == 6 && passwordInput.text == "SW0T1VAT3D"){
             messageHandler.setShipID(6);
             messageHandler.setPanelID(5);
             screensObject[5].SetActive(true);
             screensCanvas[5].SetActive(true);
             screensCanvas[7].SetActive(false);
             clock.GetComponent<Clock>().setCurrentPanel(5);
+            canRecieve = true;
         }
         //DESCON
-        else if(shipId == 7){
+        else if(shipId == 7 && passwordInput.text == "$UBDR@FT"){
             messageHandler.setShipID(7);
             messageHandler.setPanelID(6);
             screensObject[6].SetActive(true);
             screensCanvas[6].SetActive(true);
             screensCanvas[7].SetActive(false);
+            PlayerPrefs.SetInt("Ship",7);
             clock.GetComponent<Clock>().setCurrentPanel(6);
+            canRecieve = true;
         }
-        else{
+        else if(shipId !=6 && shipId != 7){
             PlayerPrefs.SetInt("shipId", shipId);
+            PlayerPrefs.SetInt("Ship",shipId);
+            passwordInput.gameObject.SetActive(false);
             shipSelection.SetActive(false);
             screenSelection.SetActive(true);
         }
     }
     public void screenSelected(int screenID){
+            PlayerPrefs.SetInt("Screen", screenID);
             string onlineMessage = selectedShip +","+ screenID+",1,1";
             Debug.Log(onlineMessage);
             sendMessage(onlineMessage);
@@ -69,6 +78,8 @@ public class StartScreenControl : MonoBehaviourPun
             screensCanvas[screenID].SetActive(true);
             screensCanvas[7].SetActive(false);
             clock.GetComponent<Clock>().setCurrentPanel(screenID);
+            LabelControl.Instance.setLabel();
+            canRecieve = true;
     }
     /*public void startHost(){
         NetworkManager.Singleton.StartHost();
@@ -96,16 +107,12 @@ public class StartScreenControl : MonoBehaviourPun
             yield return new WaitForSeconds(0.2f); 
         }
     }
-    public void testPhontonMessage(){
-        this.photonView.RPC("sendServerMessage", RpcTarget.AllBuffered, "Test Message");
-    }
     //Photon Solution
     public void sendMessage(string message){
         this.photonView.RPC("sendServerMessage", RpcTarget.AllBuffered, message);
     }
     [PunRPC]
     private void sendServerMessage(string message){
-        Debug.Log(message);
         messages.Add(message);
     }
     //Unity NetCode soultion

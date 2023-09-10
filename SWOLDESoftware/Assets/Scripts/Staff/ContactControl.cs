@@ -49,6 +49,13 @@ public class ContactControl : MonoBehaviour
             yield return new WaitForSeconds(300f);
         }
     }
+    public void removeContact(string name){
+        for(int i = 0; i < contacts.Count; i++){
+            if(contacts[i].getContactNumber() == name){
+                contacts.Remove(contacts[i]);
+            }
+        }
+    }
     public void newContact(){
         string latLon = newInputsTexts[1].text+":"+newInputsTexts[2].text;
         string message = GameObject.Find("MessageHandler").GetComponent<MessageHandler>().header();

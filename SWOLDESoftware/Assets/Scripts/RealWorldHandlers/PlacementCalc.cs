@@ -18,13 +18,13 @@ public class PlacementCalc : MonoBehaviour
         determineDistance();
         currentLoc = new double[2];
     }
-    public void determineDistance(){
+    private void determineDistance(){
         xNautMile = (marker2X.transform.position.x - marker1X.transform.position.x)/distanceX;
         yNautMile = (marker2Y.transform.position.y - marker1Y.transform.position.y)/distanceY;
-        Destroy(marker1X);
-        Destroy(marker2X);
-        Destroy(marker1Y);
-        Destroy(marker2Y);
+        marker1X.SetActive(false);
+        marker2X.SetActive(false);
+        marker1Y.SetActive(false);
+        marker2Y.SetActive(false);
     }
     public Vector3 calcWorldPos(string[] position, Vector3 currentPos){
         double latChange = CalculateLatChange(position);

@@ -10,6 +10,7 @@ public class Contact : MonoBehaviour
     [SerializeField]
     private string[] contactinfo;
     private string[] storedLatLong;
+    private float health = 1000;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +22,12 @@ public class Contact : MonoBehaviour
     void Update()
     {
         
+    }
+    public void damage(float damageDone){
+        health -= damageDone;
+        if(health <=0){
+            Destroy(this.gameObject);
+        }
     }
     private void OnMouseDown() {
         controller.contactPressed(contactinfo);

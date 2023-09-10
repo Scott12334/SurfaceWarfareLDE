@@ -14,6 +14,11 @@ public class RoomControl : MonoBehaviourPunCallbacks
     public void JoinRoom(){
         PhotonNetwork.JoinRoom(joinInputField.GetComponent<TMP_InputField>().text);
     }
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        base.OnJoinRandomFailed(returnCode, message);
+        Debug.Log(message);
+    }
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();

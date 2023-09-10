@@ -6,9 +6,9 @@ public class MessageHandler : MonoBehaviour
 {
     private int shipID;
     private int panelID;
-    [SerializeField]
-    private GameObject[] controllers;
+    [SerializeField] private GameObject[] controllers;
     private GameObject currentController;
+    [SerializeField] private Clock clock;
     public void setShipID(int newShipID){
         this.shipID = newShipID;
         Debug.Log("SHIP ID-"+shipID);
@@ -20,7 +20,32 @@ public class MessageHandler : MonoBehaviour
     } 
     public void recieveMessage(string latestMessage){
         string[] messageParts = latestMessage.Split(",");
-        if(latestMessage.Contains("disabled") && int.Parse(messageParts[0]) == shipID){
+        if(messageParts[0] == "11"){
+            clock.clockSetTime(int.Parse(messageParts[1]),int.Parse(messageParts[2]), int.Parse(messageParts[3]));
+        }
+        else if(messageParts[0] == "12"){
+            if(GameObject.Find(messageParts[2]) != null){
+                switch(panelID){
+                    case 0:
+                    //BRIDGE
+                    GameObject.Find(messageParts[2]).GetComponent<EnemyShip>().damage(int.Parse(messageParts[1]));
+                    break;
+
+                    case 4:
+                    //Contact CIC
+                    GameObject.Find(messageParts[2]).GetComponent<Contact>().damage(int.Parse(messageParts[1]));
+                    break;
+                }
+                //DESCON
+                if(shipID == 7){
+                    GameObject.Find(messageParts[2]).GetComponent<EnemyShip>().damage(int.Parse(messageParts[1]));
+                }
+                if(shipID == 6){
+                    GameObject.Find(messageParts[2]).GetComponent<ContactControl>().removeContact(messageParts[1]);
+                }
+            }
+        }
+        else if(latestMessage.Contains("disabled") && int.Parse(messageParts[0]) == shipID){
             GameObject.Find("SimController").GetComponent<StartScreenControl>().setToggle(true);
         }
         else if(latestMessage.Contains("enabled") && int.Parse(messageParts[0]) == shipID){

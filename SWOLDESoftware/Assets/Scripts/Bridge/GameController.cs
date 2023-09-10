@@ -245,21 +245,41 @@ public class GameController : MonoBehaviour
         if(ammo[3] > 0){messageToServer+= "Fire KID ";}
         messageToServer += currentEnemy.name;
         messageToServer += "Range - "+ placementCalc.getRange(selectedEnemy.getLatLon());
-        Debug.Log(messageToServer);
         GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(messageToServer);
+        calcDamage(selectedEnemy,ammo,placementCalc.getRange(selectedEnemy.getLatLon()),currentEnemy.name);
+    }
+    public void calcDamage(EnemyShip enemy, int[] ammo, double range, string enemyName){
+        int hitChange = (int)Random.Range(0,100);
+        float damageDone = 0;
+        if(hitChange <= 85){
+            //HIT
+            Debug.Log("Hitt");
+            if(ammo[0] > 0){damageDone += 500 * ammo[0];} //5 INCH
+            if(ammo[1] > 0){damageDone += 2000 * ammo[1];} //SAM
+            if(ammo[2] > 0){damageDone += 2000 * ammo[2];} //SSM
+            if(ammo[3] > 0){damageDone += 1000000 * ammo[3];} //KID
+            string messageToServer = "12,"+damageDone+","+enemyName;
+            GameObject.Find("SimController").GetComponent<StartScreenControl>().sendMessage(messageToServer);
+        }
+        else{
+            //MISS
+            Debug.Log("Miss");
+        }
     }
     IEnumerator attack(int[] ammo){
         for(int i=1; i<ammo.Length; i++){
             for(int j=0; j<ammo[i]; j++){
-                GameObject spawnedBullet = Instantiate(ammoObjects[i-1], currentShip.transform.position, Quaternion.identity);
-                Vector3 direction = (currentEnemy.transform.position - spawnedBullet.transform.position).normalized;
-                Quaternion rotation = Quaternion.LookRotation(Vector3.forward, direction);
-                if(i!=1){rotation *= Quaternion.Euler(0,0,45);}
-                else{rotation *= Quaternion.Euler(0,0,90);}
-                spawnedBullet.transform.rotation= rotation;
-                Rigidbody2D rigidbody2D= spawnedBullet.GetComponent<Rigidbody2D>();
-                rigidbody2D.AddForce(direction *5, ForceMode2D.Impulse);
-                yield return new WaitForSeconds(1f);
+                if(currentEnemy != null){
+                    GameObject spawnedBullet = Instantiate(ammoObjects[i-1], currentShip.transform.position, Quaternion.identity);
+                    Vector3 direction = (currentEnemy.transform.position - spawnedBullet.transform.position).normalized;
+                    Quaternion rotation = Quaternion.LookRotation(Vector3.forward, direction);
+                    if(i!=1){rotation *= Quaternion.Euler(0,0,45);}
+                    else{rotation *= Quaternion.Euler(0,0,90);}
+                    spawnedBullet.transform.rotation= rotation;
+                    Rigidbody2D rigidbody2D= spawnedBullet.GetComponent<Rigidbody2D>();
+                    rigidbody2D.AddForce(direction *5, ForceMode2D.Impulse);
+                    yield return new WaitForSeconds(1f);
+                }
             }
         }
     }
